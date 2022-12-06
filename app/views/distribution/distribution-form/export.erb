@@ -1,0 +1,60 @@
+<div class="btn-group" id="export-calculation-data" style="visibility: hidden">
+  <button type="button" class="btn btn-info" id="export-as-xlsx" aria-haspopup="true" aria-expanded="false">
+    XLSX
+  </button>
+</div>
+
+<script>
+    function initExport() {
+        if (!window.calculationResult) return;
+
+        const FILENAME_PREFIX = 'PoissonBinomialDistributionDataExport';
+
+        const initExportXlsx = () => {
+            document.getElementById('export-calculation-data').style.visibility = 'visible';
+            const xlsxExportButton = document.getElementById('export-as-xlsx');
+            xlsxExportButton.addEventListener('click', () => {
+                const optionsInfo = [
+                    ["Generation count", window.calculationResult.options.generationCount],
+                    ["Right boundary", window.calculationResult.options.max_x],
+                    ["Step", window.calculationResult.options.step],
+                    ["Probabilities", ...window.calculationResult.options.sigma],
+                    ["Count", window.calculationResult.options.mu],
+                    [''],
+                ];
+
+                const exportValuesInfo = [
+                    ['Mode (analytic)', window.calculationResult.pdfMeanValue],
+                    ['Variance (analytic)', window.calculationResult.pdfVarianceValue],
+                    [''],
+                    ['Mode (Neumann)', window.calculationResult.neumannMethodExpectedValue],
+                    ['Variance (Neumann)', window.calculationResult.neumannMethodVariance],
+                    [''],
+                    ['Mode (Piecewise Approximation)', window.calculationResult.piecewiseMethodExpectedValue],
+                    ['Variance (Piecewise Approximation)', window.calculationResult.piecewiseMethodVariance],
+                    [''],
+                ];
+
+                const calculationResultByMethods = [
+                    ['Neumann method frequencies', ...window.calculationResult.neumannMethod],
+                    ['Piecewise method frequencies', ...window.calculationResult.piecewiseApproximationMethod],
+                ];
+
+                const xlsxArrayData = [
+                    ...optionsInfo,
+                    ...exportValuesInfo,
+                    ...calculationResultByMethods,
+                ];
+
+                const SHEET_NAME = 'PoissonBinomialDistributionData';
+                const XLSX = window.XLSX;
+                const wb = XLSX.utils.book_new();
+                wb.SheetNames.push(SHEET_NAME);
+                wb.Sheets[SHEET_NAME] = XLSX.utils.aoa_to_sheet(xlsxArrayData);
+                XLSX.writeFile(wb, `${FILENAME_PREFIX}.xlsx`);
+            });
+        };
+        initExportXlsx();
+    }
+    initExport();
+</script>

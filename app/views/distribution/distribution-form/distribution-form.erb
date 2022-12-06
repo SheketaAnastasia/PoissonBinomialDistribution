@@ -1,0 +1,70 @@
+<%= render template: 'distribution/distribution-form/about-this-distribution' %>
+
+<div class="p-2">
+  <form>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">N = </span>
+      </div>
+      <input
+        type="number"
+        min="1"
+        class="form-control"
+        name="generation-count"
+        id="generation-count-distribution-input"
+        placeholder="Enter generation count value"
+        oninvalid="validate(this, 1)"
+        oninput="this.setCustomValidity('')"
+        required
+      >
+    </div>
+
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">p[] = </span>
+      </div>
+      <input
+        type="text"
+        pattern="[\d,. ]*"
+        class="form-control"
+        name="sigma"
+        id="sigma-distribution-input"
+        placeholder="Enter the probabilities value"
+        required
+      >
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <div>
+        <!-- Button trigger "About this Distribution" modal -->
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#about-this-distribution-modal">
+          About
+        </button>
+      </div>
+      <div class="d-flex align-items-center" style="gap: 16px;">
+        <%= render template: 'distribution/distribution-form/export' %>
+        <button type="submit" class="btn btn-primary">Calculate</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+    function validate(input, minExpectedValue) {
+        if (Number(input.value) < minExpectedValue) {
+            input.setCustomValidity(`Generation count should be greater than ${minExpectedValue}`);
+        }
+    }
+
+    function fillForm() {
+        const params = (new URL(document.location)).searchParams;
+
+        const generationCount = params.get("generation-count");
+        const sigma = params.get("sigma");
+
+        document.getElementById('generation-count-distribution-input').value = generationCount ? Number(generationCount) : 100;
+        document.getElementById('sigma-distribution-input').value = sigma ? sigma : "0.25,0.25,0.25,0.25,0.25";
+    }
+
+    fillForm();
+</script>

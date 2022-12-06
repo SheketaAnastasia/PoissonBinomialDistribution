@@ -1,0 +1,38 @@
+<div id="expected-generation-result" class="d-flex flex-column pt-4 pl-2" style="visibility: hidden; font-size: 14px;">
+  <div id="analytic-expected-value">Mean (analytic): </div>
+  <div id="analytic-variance-value">Variance (analytic): </div>
+
+  <div id="neumann-expected-value">Mean (Neumann): </div>
+  <div id="neumann-variance-value">Variance (Neumann): </div>
+
+  <div id="piecewise-expected-value">Mean (Piecewise Approximation): </div>
+  <div id="piecewise-variance-value">Variance (Piecewise Approximation): </div>
+</div>
+
+<script>
+  function fillGenerationResults() {
+      if (!window.calculationResult) return;
+      document.getElementById('expected-generation-result').style.visibility = 'visible';
+
+      const {
+          pdfMeanValue,
+          pdfVarianceValue,
+          neumannMethodExpectedValue,
+          neumannMethodVariance,
+          piecewiseMethodExpectedValue,
+          piecewiseMethodVariance,
+      } = window.calculationResult;
+
+      document.getElementById('analytic-expected-value').textContent += pdfMeanValue;
+      document.getElementById('analytic-variance-value').textContent += pdfVarianceValue;
+
+      document.getElementById('neumann-expected-value').textContent += neumannMethodExpectedValue;
+      document.getElementById('neumann-variance-value').textContent += neumannMethodVariance;
+
+      document.getElementById('piecewise-expected-value').textContent += piecewiseMethodExpectedValue;
+      document.getElementById('piecewise-variance-value').textContent += piecewiseMethodVariance;
+
+  }
+
+  fillGenerationResults();
+</script>
